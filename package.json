@@ -1,0 +1,12 @@
+{
+  "name": "san-kou7",
+  "version": "1.0.0",
+  "description": "a patformer game made in tunisia",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "parcel index.html"
+  },
+  "author": "bouzaiene chamsddine",
+  "license": "MIT"
+}
