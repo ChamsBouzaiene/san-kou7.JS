@@ -15,7 +15,8 @@ class Player {
   }
 
   static create(pos) {
-    return new Player(pos.plus(new Vec(0, -0.5)), new Vec(0, 0));
+    console.log(pos);
+    return new Player(pos.plus(new Vec(0, -2)), new Vec(0, 0));
   }
 }
 
@@ -29,6 +30,7 @@ Player.prototype.update = function (time, state, keys) {
   if (!state.level.touches(movedX, this.size, "wall")) {
     pos = movedX;
   }
+
   let ySpeed = this.speed.y + time * gravity;
   let movedY = pos.plus(new Vec(0, ySpeed * time));
   if (!state.level.touches(movedY, this.size, "wall")) {

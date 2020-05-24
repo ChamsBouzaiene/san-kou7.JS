@@ -1,10 +1,10 @@
-let scale = 20;
+import State from "../lib/State";
+import { arrowKeys } from "./listeners";
+let scale = 60;
 
 export const createNode = (name, attrs, ...children) => {
-  console.log(name, attrs);
   let node = document.createElement(name);
   for (let attr of Object.keys(attrs)) {
-    console.log(attr, attrs[attr]);
     node.setAttribute(attr, attrs[attr]);
   }
   for (let child of children) {
@@ -38,11 +38,10 @@ export function drawActors(actors) {
     {},
     ...actors.map((actor) => {
       let rect = createNode("div", { class: "actor " + actor.type });
-      console.log(actor.size, "tttt");
       rect.style.width = `${actor.size.x * scale}px`;
       rect.style.height = `${actor.size.y * scale}px`;
       rect.style.left = `${actor.pos.x * scale}px`;
-      rect.style.top = `${actor.size.y * scale}px`;
+      rect.style.top = `${actor.pos.y * scale}px`;
       return rect;
     })
   );
@@ -61,22 +60,24 @@ export function runAnimation(frameFunc) {
   requestAnimationFrame(frame);
 }
 
-function runLevel(level, Display) {
-  let display = new Display(document.body, level);
+export function runLevel(level, dis) {
+  let display = dis;
   let state = State.start(level);
   let ending = 1;
   return new Promise((resolve) => {
-    state = state.update(time, arrowKeys);
-    display.syncState(state);
-    if (state.status === "playing") {
-      return true;
-    } else if (ending > 0) {
-      ending -= time;
-      return true;
-    } else {
-      display.clear();
-      resolve(state.status);
-      return false;
-    }
+    runAnimation((time) => {
+      state = state.update(time, arrowKeys);
+      display.syncState(state);
+      if (state.status == "playing") {
+        return true;
+      } else if (ending > 0) {
+        ending -= time;
+        return true;
+      } else {
+        display.clear();
+        resolve(state.status);
+        return false;
+      }
+    });
   });
 }

@@ -14,10 +14,7 @@ class Level {
     this.rows = rows.map((row, y) => {
       return row.map((ch, x) => {
         let type = levelChars[ch];
-        console.log(ch);
-
         if (typeof type == "string") return type;
-        console.log(type);
         this.startActors.push(type.create(new Vec(x, y), ch));
         return "empty";
       });
@@ -26,15 +23,16 @@ class Level {
 }
 
 Level.prototype.touches = function (pos, size, type) {
-  let xStart = Math.floor(pos.x);
-  let xEnd = Math.ceil(pos.x + size.x);
-  let yStart = Math.floor(pos.y);
-  let yEnd = Math.floor(pos.y + size.y);
-  for (let y = yStart; y < yEnd; y++) {
-    for (let x = xStart; x < xEnd; x++) {
+  var xStart = Math.floor(pos.x);
+  var xEnd = Math.ceil(pos.x + size.x);
+  var yStart = Math.floor(pos.y);
+  var yEnd = Math.ceil(pos.y + size.y);
+
+  for (var y = yStart; y < yEnd; y++) {
+    for (var x = xStart; x < xEnd; x++) {
       let isOutside = x < 0 || x >= this.width || y < 0 || y >= this.height;
       let here = isOutside ? "wall" : this.rows[y][x];
-      if (here === type) return true;
+      if (here == type) return true;
     }
   }
   return false;

@@ -1,6 +1,6 @@
 import { createNode, drawActors, drawGrid } from "./lib";
 
-const scale = 20;
+const scale = 40;
 class DomDisplay {
   constructor(parent, level) {
     this.dom = createNode("div", { class: "game" }, drawGrid(level));
@@ -15,7 +15,6 @@ class DomDisplay {
 
 DomDisplay.prototype.syncState = function (state) {
   if (this.actorLayer) this.actorLayer.remove();
-  console.log(state.actors);
   this.actorLayer = drawActors(state.actors);
   this.dom.appendChild(this.actorLayer);
   this.dom.className = `game ${state.status}`;
@@ -26,12 +25,16 @@ DomDisplay.prototype.scrollPlayerIntoView = function (state) {
   let width = this.dom.clientWidth;
   let height = this.dom.clientHeight;
   let margin = width / 3;
-  let left = this.dom.scrolLeft;
-  let top = this.dom.scrolTop;
-  let bottom = top + height;
-  let right = left + width;
+
+  // The viewport
+  let left = this.dom.scrollLeft,
+    right = left + width;
+  let top = this.dom.scrollTop,
+    bottom = top + height;
+
   let player = state.player;
-  let center = player.pos.plus(player.size.times(0.5).times(scale));
+  let center = player.pos.plus(player.size.times(0.5)).times(scale);
+
   if (center.x < left + margin) {
     this.dom.scrollLeft = center.x - margin;
   } else if (center.x > right - margin) {

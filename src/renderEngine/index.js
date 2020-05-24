@@ -1,9 +1,14 @@
 import Level from "../lib/Level";
+import { runLevel } from "./lib";
+import "regenerator-runtime/runtime";
 
 export async function runGame(plans, Display) {
-  for (let level = 0; level < plans.length; ) {
-    let status = await runLevel(new Level(plans[level]), Display);
-    if (status === "won") level++;
+  let status;
+  try {
+    status = await runLevel(plans, Display);
+  } catch (e) {
+    console.error(e);
   }
-  console.log("You Have Won!");
+  if (status == "won") return console.log("You've won!");
+  console.log("You Lost");
 }
