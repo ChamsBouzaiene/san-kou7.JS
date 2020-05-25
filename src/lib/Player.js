@@ -5,9 +5,26 @@ const gravity = 30;
 const jumpSpeed = 17;
 
 class Player {
-  constructor(pos, speed) {
+  constructor(pos, speed, stance) {
     this.pos = pos;
     this.speed = speed;
+    this.stance = stance;
+  }
+
+  static updateStance(keys) {
+    if (keys.ArrowUp) {
+      console.log("up!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+      return "jump";
+    }
+    if (keys.ArrowLeft) {
+      console.log("up!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+      return "left";
+    }
+    if (keys.ArrowRight) {
+      console.log("up!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+      return "right";
+    }
+    return "idle";
   }
 
   get type() {
@@ -22,6 +39,7 @@ class Player {
 
 Player.prototype.size = new Vec(0.8, 1.5);
 Player.prototype.update = function (time, state, keys) {
+  let stance = Player.updateStance(keys);
   let xSpeed = 0;
   if (keys.ArrowLeft) xSpeed -= playerXSpeed;
   if (keys.ArrowRight) xSpeed += playerXSpeed;
@@ -40,7 +58,7 @@ Player.prototype.update = function (time, state, keys) {
   } else {
     ySpeed = 0;
   }
-  return new Player(pos, new Vec(xSpeed, ySpeed));
+  return new Player(pos, new Vec(xSpeed, ySpeed), stance);
 };
 
 export default Player;

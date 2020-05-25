@@ -24,6 +24,7 @@ class State {
 
 State.prototype.update = function (time, keys) {
   let actors = this.actors.map((actor) => actor.update(time, this, keys));
+  console.log(keys);
   let newState = new State(this.level, actors, this.status);
   if (newState.status != "playing") return newState;
   let player = newState.player;

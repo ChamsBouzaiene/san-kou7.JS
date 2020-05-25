@@ -47,8 +47,29 @@ export function drawActors(actors) {
   );
 }
 
+function updatePlayerAnimation(playerNode, stance) {
+  console.log(playerNode, stance);
+  if (stance === "right") {
+    playerNode.classList.remove("idle");
+    playerNode.classList.remove("left");
+
+    playerNode.classList.add("right");
+  } else if (stance === "left") {
+    playerNode.classList.remove("idle");
+    playerNode.classList.remove("right");
+    playerNode.classList.add("left");
+  } else {
+    playerNode.classList.remove("right");
+    playerNode.classList.remove("left");
+
+    playerNode.classList.add("idle");
+  }
+}
+
 function updatePlayer(nodes, state) {
   const playerNode = nodes.getElementsByClassName("player")[0];
+  const { stance } = state.player;
+  updatePlayerAnimation(playerNode, stance);
   if (state.player) updateActor(playerNode, state.player);
 }
 
