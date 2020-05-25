@@ -14,6 +14,12 @@ class State {
   get player() {
     return this.actors.find((a) => a.type === "player");
   }
+  get coin() {
+    return this.actors.filter((a) => a.type === "coin");
+  }
+  get lava() {
+    return this.actors.find((a) => a.type === "lava");
+  }
 }
 
 State.prototype.update = function (time, keys) {

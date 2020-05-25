@@ -4,17 +4,17 @@
 }
 
 body {
-  background: #ff512f; /* fallback for old browsers */
-  background: -webkit-linear-gradient(
+  /* background: #ff512f; */
+  /* background: -webkit-linear-gradient(
     to left,
     #dd2476,
     #ff512f
-  ); /* Chrome 10-25, Safari 5.1-6 */
+  );
   background: linear-gradient(
     to left,
     #dd2476,
     #ff512f
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  );  */
 }
 
 .background {
@@ -29,18 +29,49 @@ body {
   background: rgb(255, 100, 100);
 }
 .wall {
-  background: white;
+  background-image: url("./tile-2.png");
+  background-repeat: no-repeat;
+  /*transform: translate(50%, 50%);*/
+  background-position-y: -5px;
 }
 
 .actor {
   position: absolute;
 }
 .coin {
-  background: rgb(241, 229, 89);
+  background-image: url("./fitted-coins.png");
+  background-repeat: no-repeat;
+  /*transform: translate(50%, 50%);*/
+  background-position-y: 0px;
+  animation: animateCoins 1s steps(7) infinite;
 }
+
+@keyframes animateCoins {
+  from {
+    background-position-x: -8px;
+  }
+  to {
+    background-position-x: -428px;
+  }
+}
+
 .player {
-  background: rgb(64, 64, 64);
+  background-image: url("./newSprite.png");
+  background-repeat: no-repeat;
+  /*transform: translate(50%, 50%);*/
+  background-position-y: -5px;
+  animation: animate 1s steps(4) infinite;
 }
+
+@keyframes animate {
+  from {
+    background-position-x: 0;
+  }
+  to {
+    background-position-x: -290px;
+  }
+}
+
 .lost .player {
   background: rgb(160, 64, 64);
 }

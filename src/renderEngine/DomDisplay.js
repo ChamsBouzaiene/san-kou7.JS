@@ -1,6 +1,6 @@
-import { createNode, drawActors, drawGrid } from "./lib";
+import { createNode, drawActors, drawGrid, updateActors } from "./lib";
 
-const scale = 40;
+const scale = 80;
 class DomDisplay {
   constructor(parent, level) {
     this.dom = createNode("div", { class: "game" }, drawGrid(level));
@@ -13,10 +13,25 @@ class DomDisplay {
   }
 }
 
+// Create DoM Nodes
+
+// DomDisplay.prototype.syncState = function (state) {
+
+//   if (this.actorLayer) this.actorLayer.remove();
+
+//   this.actorLayer = drawActors(state.actors);
+//   this.dom.appendChild(this.actorLayer);
+//   this.dom.className = `game ${state.status}`;
+//   this.scrollPlayerIntoView(state);
+// };
+
 DomDisplay.prototype.syncState = function (state) {
-  if (this.actorLayer) this.actorLayer.remove();
-  this.actorLayer = drawActors(state.actors);
-  this.dom.appendChild(this.actorLayer);
+  console.log(state.status);
+  if (this.actorLayer) updateActors(this.actorLayer, state);
+  if (!this.actorLayer) {
+    this.actorLayer = drawActors(state.actors);
+    this.dom.appendChild(this.actorLayer);
+  }
   this.dom.className = `game ${state.status}`;
   this.scrollPlayerIntoView(state);
 };
