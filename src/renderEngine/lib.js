@@ -1,4 +1,6 @@
 import State from "../lib/State";
+import Menu from "../lib/Menu";
+
 import { arrowKeys } from "./listeners";
 let scale = 80;
 
@@ -52,16 +54,23 @@ function updatePlayerAnimation(playerNode, stance) {
   if (stance === "right") {
     playerNode.classList.remove("idle");
     playerNode.classList.remove("left");
-
+    playerNode.classList.remove("jump");
     playerNode.classList.add("right");
   } else if (stance === "left") {
     playerNode.classList.remove("idle");
     playerNode.classList.remove("right");
+    playerNode.classList.remove("jump");
+
     playerNode.classList.add("left");
+  } else if (stance === "jump") {
+    playerNode.classList.remove("idle");
+    playerNode.classList.remove("right");
+    playerNode.classList.remove("left");
+    playerNode.classList.add("jump");
   } else {
     playerNode.classList.remove("right");
     playerNode.classList.remove("left");
-
+    playerNode.classList.remove("jump");
     playerNode.classList.add("idle");
   }
 }
@@ -129,8 +138,9 @@ export function runAnimation(frameFunc) {
 }
 
 export function runLevel(level, dis) {
+  let menu = new Menu();
   let display = dis;
-  let state = State.start(level);
+  let state = State.start(level, menu.state);
   let ending = 1;
   let pause = 0;
   return new Promise((resolve) => {
@@ -138,9 +148,13 @@ export function runLevel(level, dis) {
       if (true) {
         state = state.update(time, arrowKeys);
         display.syncState(state);
-        if (state.status == "playing") {
+        if (state.status === "playing") {
           pause++;
           return true;
+        } else if (state.status === "lost") {
+          display.clear();
+          resolve(state.status);
+          return false;
         } else if (ending > 0) {
           ending -= time;
           return true;

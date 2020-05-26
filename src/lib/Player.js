@@ -13,15 +13,12 @@ class Player {
 
   static updateStance(keys) {
     if (keys.ArrowUp) {
-      console.log("up!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
       return "jump";
     }
     if (keys.ArrowLeft) {
-      console.log("up!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
       return "left";
     }
     if (keys.ArrowRight) {
-      console.log("up!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
       return "right";
     }
     return "idle";

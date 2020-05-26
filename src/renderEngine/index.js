@@ -9,6 +9,6 @@ export async function runGame(plans, Display) {
   } catch (e) {
     console.error(e);
   }
-  if (status == "won") return console.log("You've won!");
+  if (status === "won") return console.log("You've won!");
   console.log("You Lost");
 }

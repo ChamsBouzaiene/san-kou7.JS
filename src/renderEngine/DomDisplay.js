@@ -8,6 +8,12 @@ class DomDisplay {
     parent.appendChild(this.dom);
   }
 
+  restart() {}
+
+  pause() {}
+
+  static showMenu() {}
+
   clear() {
     this.dom.remove();
   }

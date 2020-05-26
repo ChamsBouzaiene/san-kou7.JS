@@ -1,14 +1,15 @@
 import { overlap } from "../renderEngine/physX";
 
 class State {
-  constructor(level, actors, status) {
+  constructor(level, actors, status, menu) {
     this.level = level;
     this.actors = actors;
     this.status = status;
+    this.menu = menu;
   }
 
   static start(level) {
-    return new State(level, level.startActors, "playing");
+    return new State(level, level.startActors, "playing", "playing");
   }
 
   get player() {

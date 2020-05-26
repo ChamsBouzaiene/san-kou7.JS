@@ -97,6 +97,11 @@ td.lava {
   background-image: url("./left.png");
 }
 
+.jump {
+  animation: animateWalkRight 1s steps(4) infinite;
+  background-image: url("./jump.png");
+}
+
 .right {
   animation: animateWalkRight 1s steps(4) infinite;
   background-image: url("./right.png");
