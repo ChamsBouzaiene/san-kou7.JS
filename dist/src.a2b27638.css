@@ -1,27 +1,149 @@
+@import url("https://fonts.googleapis.com/css2?family=Bangers&display=swap");
+
+.title-box {
+}
+
+body {
+  /* background: #ff512f; */
+  /* background: -webkit-linear-gradient(
+    to left,
+    #dd2476,
+    #ff512f
+  );
+  background: linear-gradient(
+    to left,
+    #dd2476,
+    #ff512f
+  );  */
+}
+
 .background {
   background: rgb(52, 166, 251);
+  background-image: url("/bg.cd2b7aec.png");
+  background-repeat: no-repeat;
   table-layout: fixed;
   border-spacing: 0;
 }
 .background td {
   padding: 0;
+  margin: 0;
+  border-spacing: 0;
+  border: 0;
 }
-.lava {
-  background: rgb(255, 100, 100);
+.actor.lava {
+  background-image: url("/sun.8a01f27a.gif");
+  background-repeat: no-repeat;
 }
+td.lava {
+  background-image: url("/lava-5.6562e1f5.png");
+  background-repeat: no-repeat;
+  background-size: 100%;
+  border-spacing: 0;
+  background-size: 220%;
+
+  background-position-x: -5px;
+  background-position-y: 5px;
+
+  animation: animateLava 1s steps(2) infinite;
+}
+
+@keyframes animateLava {
+  from {
+    background-position-x: -5px;
+  }
+  to {
+    background-position-x: -176px;
+  }
+}
+
 .wall {
-  background: white;
+  background-image: url("/tile-2.54aa889e.png");
+  background-repeat: no-repeat;
+  /*transform: translate(50%, 50%);*/
+  background-position-y: -5px;
 }
 
 .actor {
   position: absolute;
 }
 .coin {
-  background: rgb(241, 229, 89);
+  background-image: url("/fitted-coins.735a9403.png");
+  background-repeat: no-repeat;
+  /*transform: translate(50%, 50%);*/
+  background-position-y: 0px;
+  animation: animateCoins 1s steps(7) infinite;
 }
+
+@keyframes animateCoins {
+  from {
+    background-position-x: -8px;
+  }
+  to {
+    background-position-x: -428px;
+  }
+}
+
 .player {
-  background: rgb(64, 64, 64);
+  /* background-image: url("./right.png"); */
+  background-repeat: no-repeat;
+  /*transform: translate(50%, 50%);*/
+  background-position-y: -5px;
+  /* animation: animateWalk 1s st
+  eps(4) infinite; */
 }
+
+.left {
+  animation: animateWalkLeft 1s steps(4) infinite;
+  background-image: url("/left.13b2cb78.png");
+}
+
+.jump-left {
+  animation: animateWalkRight 1s steps(4) infinite;
+  background-image: url("/jumpLeft.ae5ef804.png");
+}
+
+.jump {
+  animation: animateWalkRight 1s steps(4) infinite;
+  background-image: url("/jump.0bce018e.png");
+}
+
+.right {
+  animation: animateWalkRight 1s steps(4) infinite;
+  background-image: url("/right.78f71526.png");
+}
+
+.idle {
+  animation: animateIdle 1s steps(4) infinite;
+  background-image: url("/newSprite.137c35f6.png");
+}
+
+@keyframes animateWalkLeft {
+  from {
+    background-position-x: 0;
+  }
+  to {
+    background-position-x: -318px;
+  }
+}
+
+@keyframes animateWalkRight {
+  from {
+    background-position-x: 0;
+  }
+  to {
+    background-position-x: -318px;
+  }
+}
+
+@keyframes animateIdle {
+  from {
+    background-position-x: 0;
+  }
+  to {
+    background-position-x: -290px;
+  }
+}
+
 .lost .player {
   background: rgb(160, 64, 64);
 }
@@ -30,9 +152,38 @@
 }
 .game {
   overflow: hidden;
-  max-width: 600px;
-  max-height: 450px;
+  max-width: 1320px;
+  max-height: 1000px;
+  margin: auto;
   position: relative;
+}
+
+h1 {
+  text-align: center;
+  text-shadow: 0px 0px 5px #000000, 0px 0px 5px #000000, 0px 0px 5px #000000,
+    0px 0px 12px #000000, 0px 0px 12px #000000;
+  -webkit-text-stroke: 1px black;
+  font-weight: bold;
+  position: relative;
+  color: rebeccapurple;
+  font-family: "Bangers", cursive;
+  font-size: 100px;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.js-title {
+  color: rgb(255, 238, 6);
+
+  text-shadow: 0px 0px 5px #000000, 0px 0px 5px #000000, 0px 0px 5px #000000,
+    0px 0px 12px #000000, 0px 0px 12px #000000, 0px 0px 12px #000000;
+  font-weight: bold;
+  -webkit-text-stroke: 1px black;
+  font-size: 130px;
+  text-align: center;
+  font-family: "Bangers", cursive;
+
+  position: absolute;
 }
 
 

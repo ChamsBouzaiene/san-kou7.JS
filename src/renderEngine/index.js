@@ -2,10 +2,10 @@ import Level from "../lib/Level";
 import { runLevel } from "./lib";
 import "regenerator-runtime/runtime";
 
-export async function runGame(plans, Display) {
+export async function runGame(plans, Display, Menu) {
   let status;
   try {
-    status = await runLevel(plans, Display);
+    status = await runLevel(plans, Display, Menu);
   } catch (e) {
     console.error(e);
   }

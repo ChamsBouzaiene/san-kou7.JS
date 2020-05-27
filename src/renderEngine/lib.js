@@ -49,24 +49,32 @@ export function drawActors(actors) {
   );
 }
 
-function updatePlayerAnimation(playerNode, stance) {
-  console.log(playerNode, stance);
-  if (stance === "right") {
-    playerNode.classList.remove("idle");
-    playerNode.classList.remove("left");
-    playerNode.classList.remove("jump");
-    playerNode.classList.add("right");
-  } else if (stance === "left") {
-    playerNode.classList.remove("idle");
-    playerNode.classList.remove("right");
-    playerNode.classList.remove("jump");
+const playerMovementStates = {};
 
+const playerMovementMaper = {
+  isMovingRight: (stance, speed) => stance === "right" && !speed.y,
+  isMovingLeft: (stance, speed) => stance === "left" && !speed.y,
+  isJumping: (stance, speed) => stance === "jump" || speed.y,
+  isJumpingRight: (stance, speed) => {},
+  isJumpingLeft: (stance, speed) => {},
+};
+
+function updatePlayerAnimation(playerNode, stance, speed) {
+  console.log(playerNode, stance, speed.y);
+  const { isMovingRight, isMovingLeft, isJumping } = playerMovementMaper;
+  if (isMovingRight(stance, speed)) {
+    playerNode.classList.remove("idle", "left", "jump");
+    playerNode.classList.add("right");
+  } else if (isMovingLeft(stance, speed)) {
+    playerNode.classList.remove("idle", "right", "jump");
     playerNode.classList.add("left");
-  } else if (stance === "jump") {
-    playerNode.classList.remove("idle");
-    playerNode.classList.remove("right");
-    playerNode.classList.remove("left");
-    playerNode.classList.add("jump");
+  } else if (stance === "jump" || speed.y) {
+    playerNode.classList.remove("idle", "right", "left", "jump", "jump-left");
+    if (stance === "left" || speed.x < 0) {
+      playerNode.classList.add("jump-left");
+    } else {
+      playerNode.classList.add("jump");
+    }
   } else {
     playerNode.classList.remove("right");
     playerNode.classList.remove("left");
@@ -77,8 +85,9 @@ function updatePlayerAnimation(playerNode, stance) {
 
 function updatePlayer(nodes, state) {
   const playerNode = nodes.getElementsByClassName("player")[0];
-  const { stance } = state.player;
-  updatePlayerAnimation(playerNode, stance);
+  const { stance, speed } = state.player;
+  console.log(speed);
+  updatePlayerAnimation(playerNode, stance, speed);
   if (state.player) updateActor(playerNode, state.player);
 }
 
@@ -137,33 +146,83 @@ export function runAnimation(frameFunc) {
   requestAnimationFrame(frame);
 }
 
-export function runLevel(level, dis) {
-  let menu = new Menu();
+export function runLevel(level, dis, men) {
+  let menu = men;
   let display = dis;
-  let state = State.start(level, menu.state);
+  let state = State.start(level, menu);
   let ending = 1;
   let pause = 0;
   return new Promise((resolve) => {
     runAnimation((time) => {
-      if (true) {
-        state = state.update(time, arrowKeys);
-        display.syncState(state);
-        if (state.status === "playing") {
-          pause++;
-          return true;
-        } else if (state.status === "lost") {
-          display.clear();
-          resolve(state.status);
-          return false;
-        } else if (ending > 0) {
-          ending -= time;
-          return true;
-        } else {
-          display.clear();
-          resolve(state.status);
-          return false;
-        }
+      state = state.update(time, arrowKeys);
+      console.log(state);
+      display.syncState(state);
+      if (state.status === "playing") {
+        pause++;
+        return true;
+      } else if (state.status === "paused") {
+        //display.menu();
+        //display.clear();
+        return true;
+      } else if (state.status === "lost") {
+        display.menu();
+        //display.clear();
+        return false;
+      } else if (ending > 0) {
+        ending -= time;
+        return true;
+      } else {
+        display.clear();
+        resolve(state.status);
+        return false;
       }
     });
+  });
+}
+
+function runLevel(level, Display) {
+  let display = new Display(document.body, level);
+  let state = State.start(level);
+  let ending = 1;
+  let running = "yes";
+
+  return new Promise((resolve) => {
+    function escHandler(event) {
+      if (event.key != "Escape") return;
+      event.preventDefault();
+      if (running == "no") {
+        running = "yes";
+        runAnimation(frame);
+      } else if (running == "yes") {
+        running = "pausing";
+      } else {
+        running = "yes";
+      }
+    }
+    window.addEventListener("keydown", escHandler);
+    let arrowKeys = trackKeys(["ArrowLeft", "ArrowRight", "ArrowUp"]);
+
+    function frame(time) {
+      if (running == "pausing") {
+        running = "no";
+        return false;
+      }
+
+      state = state.update(time, arrowKeys);
+      display.syncState(state);
+      if (state.status == "playing") {
+        return true;
+      } else if (ending > 0) {
+        ending -= time;
+        return true;
+      } else {
+        display.clear();
+        window.removeEventListener("keydown", escHandler);
+        arrowKeys.unregister();
+        resolve(state.status);
+        return false;
+      }
+    }
+    runAnimation(frame);
   });
 }

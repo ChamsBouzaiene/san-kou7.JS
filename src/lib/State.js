@@ -8,8 +8,15 @@ class State {
     this.menu = menu;
   }
 
-  static start(level) {
-    return new State(level, level.startActors, "playing", "playing");
+  static start(level, menu) {
+    return new State(level, level.startActors, "playing", menu);
+  }
+
+  static nextStatus(prevStatus, keys) {
+    if (prevStatus === "playing" && keys.Escape) {
+      return "paused";
+    }
+    return prevStatus;
   }
 
   get player() {
@@ -25,8 +32,10 @@ class State {
 
 State.prototype.update = function (time, keys) {
   let actors = this.actors.map((actor) => actor.update(time, this, keys));
-  console.log(keys);
-  let newState = new State(this.level, actors, this.status);
+  let status = State.nextStatus(this.status, keys);
+  let menu = this.menu.update(this, keys);
+  console.log(menu, "new MEnu");
+  let newState = new State(this.level, actors, status, menu);
   if (newState.status != "playing") return newState;
   let player = newState.player;
   if (this.level.touches(player.pos, player.size, "lava")) {
