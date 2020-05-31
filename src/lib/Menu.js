@@ -9,8 +9,6 @@ export default class Menu {
 
 Menu.prototype.update = function (state, keys) {
   if (keys.Escape && state.status === "playing") {
-    console.log(state.status);
-    console.log("yessssssssssssssssssssssssssssss!!!!!!!!!");
     return new Menu("on");
   }
   // if ("keyEsc" && "state.status" === "palying") {

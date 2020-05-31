@@ -19,9 +19,10 @@ body {
 
 .background {
   background: rgb(52, 166, 251);
-  background-image: url("./bg.png");
+  background-image: url("./bg2.png");
   background-repeat: no-repeat;
   table-layout: fixed;
+  background-size: 6400px 6400px;
   border-spacing: 0;
 }
 .background td {
@@ -33,11 +34,11 @@ body {
 .actor.lava {
   background-image: url("./sun.gif");
   background-repeat: no-repeat;
+  background-size: 100%;
 }
 td.lava {
   background-image: url("./lava-5.png");
   background-repeat: no-repeat;
-  background-size: 100%;
   border-spacing: 0;
   background-size: 220%;
 
@@ -92,6 +93,33 @@ td.lava {
   eps(4) infinite; */
 }
 
+.coin-collected {
+  content: "+1";
+  color: white;
+  font-weight: bold;
+  font-size: 100px;
+  position: absolute;
+  top: -80px;
+  font-family: "Bangers", cursive;
+  animation: plusOne 1s linear;
+}
+
+@keyframes plusOne {
+  from {
+    top: -40px;
+    font-size: 50px;
+    filter: contrast(100%);
+  }
+  to {
+    top: -80px;
+    font-size: 100px;
+    filter: contrast(200%);
+  }
+}
+
+.player:after {
+}
+
 .left {
   animation: animateWalkLeft 1s steps(4) infinite;
   background-image: url("./left.png");
@@ -117,12 +145,21 @@ td.lava {
   background-image: url("./newSprite.png");
 }
 
+@keyframes animateWalkDie {
+  from {
+    background-position-x: 0;
+  }
+  to {
+    background-position-x: -218px;
+  }
+}
+
 @keyframes animateWalkLeft {
   from {
     background-position-x: 0;
   }
   to {
-    background-position-x: -318px;
+    background-position-x: -327px;
   }
 }
 
@@ -145,11 +182,27 @@ td.lava {
 }
 
 .lost .player {
-  background: rgb(160, 64, 64);
+  animation: animateWalkDie 1s steps(3) infinite;
+  background-position-y: -15px;
+  filter: grayscale(70%);
+  background-image: url("./die-2.png");
 }
 .won .player {
   box-shadow: -4px -7px 8px white, 4px -7px 8px white;
+
+  transition: filter ease-in-out;
+  animation: animateWin 0.5s infinite;
 }
+
+@keyframes animateWin {
+  from {
+    filter: brightness(150%);
+  }
+  to {
+    filter: brightness(200%);
+  }
+}
+
 .game {
   overflow: hidden;
   max-width: 1320px;

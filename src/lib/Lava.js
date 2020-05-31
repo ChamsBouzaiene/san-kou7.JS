@@ -24,7 +24,7 @@ class Lava {
 }
 
 Lava.prototype.collide = function (state) {
-  return new State(state.level, state.actors, "Lost");
+  return new State(state.level, state.actors, "lost");
 };
 
 Lava.prototype.update = function (time, state) {

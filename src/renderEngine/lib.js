@@ -1,8 +1,15 @@
 import State from "../lib/State";
-import Menu from "../lib/Menu";
+import Animation from "./Animation";
+import DOMActors from "./DOMActors";
+
+//import Menu from "../lib/Menu";
 
 import { arrowKeys } from "./listeners";
 let scale = 80;
+
+export function drawMenu(pause) {
+  createNode();
+}
 
 export const createNode = (name, attrs, ...children) => {
   let node = document.createElement(name);
@@ -60,7 +67,6 @@ const playerMovementMaper = {
 };
 
 function updatePlayerAnimation(playerNode, stance, speed) {
-  console.log(playerNode, stance, speed.y);
   const { isMovingRight, isMovingLeft, isJumping } = playerMovementMaper;
   if (isMovingRight(stance, speed)) {
     playerNode.classList.remove("idle", "left", "jump");
@@ -86,14 +92,15 @@ function updatePlayerAnimation(playerNode, stance, speed) {
 function updatePlayer(nodes, state) {
   const playerNode = nodes.getElementsByClassName("player")[0];
   const { stance, speed } = state.player;
-  console.log(speed);
   updatePlayerAnimation(playerNode, stance, speed);
   if (state.player) updateActor(playerNode, state.player);
 }
 
 function updateLava(nodes, state) {
-  const lavaNode = nodes.getElementsByClassName("lava")[0];
-  if (state.lava) updateActor(lavaNode, state.lava);
+  const lavaNode = nodes.getElementsByClassName("lava");
+  Array.from(lavaNode).forEach((lavaNode, i) => {
+    if (state.lava) updateActor(lavaNode, state.lava[i]);
+  });
 }
 
 function syncCoins(state, display) {
@@ -108,11 +115,9 @@ function syncCoins(state, display) {
 }
 
 function updateCoin(nodes, state) {
-  console.log(state.coin);
   const coinNodes = nodes.getElementsByClassName("coin");
   const updateableCoins = syncCoins(state, coinNodes);
   Array.from(coinNodes).forEach((coinNode, i) => {
-    console.log(state.coin[i]);
     if (state.coin && state.coin[i]) updateActor(coinNode, state.coin[i]);
   });
 }
@@ -128,9 +133,19 @@ export function updateActors(actorLayer, state) {
   updatePlayer(actorLayer, state);
   updateLava(actorLayer, state);
   updateCoin(actorLayer, state);
+  actionReducer(state.action, actorLayer);
   // updateLava();
 
   return;
+}
+
+export function actionReducer(action, actors) {
+  const player = DOMActors.getPlayer(actors);
+  if (action == "coinEated") {
+    console.log("EATED");
+    Animation.collectedCoin(player);
+  }
+  Animation.cleanUP(player);
 }
 
 export function runAnimation(frameFunc) {
@@ -146,33 +161,36 @@ export function runAnimation(frameFunc) {
   requestAnimationFrame(frame);
 }
 
-export function runLevel(level, dis, men) {
+export function runLevel(level, dis, men, gameControler) {
   let menu = men;
   let display = dis;
   let state = State.start(level, menu);
   let ending = 1;
-  let pause = 0;
+
   return new Promise((resolve) => {
     runAnimation((time) => {
+      if (gameControler.status === "paused") {
+        // gameControler.setStatus("playing");
+        display.showMenu("paused");
+        return;
+      }
       state = state.update(time, arrowKeys);
-      console.log(state);
       display.syncState(state);
       if (state.status === "playing") {
-        pause++;
         return true;
       } else if (state.status === "paused") {
-        //display.menu();
         //display.clear();
         return true;
       } else if (state.status === "lost") {
-        display.menu();
+        resolve(state.status);
+        //display.menu();
         //display.clear();
         return false;
       } else if (ending > 0) {
         ending -= time;
         return true;
       } else {
-        display.clear();
+        //display.clear();
         resolve(state.status);
         return false;
       }
@@ -180,49 +198,49 @@ export function runLevel(level, dis, men) {
   });
 }
 
-function runLevel(level, Display) {
-  let display = new Display(document.body, level);
-  let state = State.start(level);
-  let ending = 1;
-  let running = "yes";
+// function runLevel(level, Display) {
+//   let display = new Display(document.body, level);
+//   let state = State.start(level);
+//   let ending = 1;
+//   let running = "yes";
 
-  return new Promise((resolve) => {
-    function escHandler(event) {
-      if (event.key != "Escape") return;
-      event.preventDefault();
-      if (running == "no") {
-        running = "yes";
-        runAnimation(frame);
-      } else if (running == "yes") {
-        running = "pausing";
-      } else {
-        running = "yes";
-      }
-    }
-    window.addEventListener("keydown", escHandler);
-    let arrowKeys = trackKeys(["ArrowLeft", "ArrowRight", "ArrowUp"]);
+//   return new Promise((resolve) => {
+//     function escHandler(event) {
+//       if (event.key != "Escape") return;
+//       event.preventDefault();
+//       if (running == "no") {
+//         running = "yes";
+//         runAnimation(frame);
+//       } else if (running == "yes") {
+//         running = "pausing";
+//       } else {
+//         running = "yes";
+//       }
+//     }
+//     window.addEventListener("keydown", escHandler);
+//     let arrowKeys = trackKeys(["ArrowLeft", "ArrowRight", "ArrowUp"]);
 
-    function frame(time) {
-      if (running == "pausing") {
-        running = "no";
-        return false;
-      }
+//     function frame(time) {
+//       if (running == "pausing") {
+//         running = "no";
+//         return false;
+//       }
 
-      state = state.update(time, arrowKeys);
-      display.syncState(state);
-      if (state.status == "playing") {
-        return true;
-      } else if (ending > 0) {
-        ending -= time;
-        return true;
-      } else {
-        display.clear();
-        window.removeEventListener("keydown", escHandler);
-        arrowKeys.unregister();
-        resolve(state.status);
-        return false;
-      }
-    }
-    runAnimation(frame);
-  });
-}
+//       state = state.update(time, arrowKeys);
+//       display.syncState(state);
+//       if (state.status == "playing") {
+//         return true;
+//       } else if (ending > 0) {
+//         ending -= time;
+//         return true;
+//       } else {
+//         display.clear();
+//         window.removeEventListener("keydown", escHandler);
+//         arrowKeys.unregister();
+//         resolve(state.status);
+//         return false;
+//       }
+//     }
+//     runAnimation(frame);
+//   });
+// }

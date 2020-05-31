@@ -1,15 +1,15 @@
 import { overlap } from "../renderEngine/physX";
 
 class State {
-  constructor(level, actors, status, menu) {
+  constructor(level, actors, status, action) {
     this.level = level;
     this.actors = actors;
     this.status = status;
-    this.menu = menu;
+    this.action = action;
   }
 
-  static start(level, menu) {
-    return new State(level, level.startActors, "playing", menu);
+  static start(level) {
+    return new State(level, level.startActors, "playing");
   }
 
   static nextStatus(prevStatus, keys) {
@@ -26,16 +26,15 @@ class State {
     return this.actors.filter((a) => a.type === "coin");
   }
   get lava() {
-    return this.actors.find((a) => a.type === "lava");
+    return this.actors.filter((a) => a.type === "lava");
   }
 }
 
 State.prototype.update = function (time, keys) {
   let actors = this.actors.map((actor) => actor.update(time, this, keys));
-  let status = State.nextStatus(this.status, keys);
-  let menu = this.menu.update(this, keys);
-  console.log(menu, "new MEnu");
-  let newState = new State(this.level, actors, status, menu);
+  //let status = State.nextStatus(this.status, keys);
+  //let menu = this.menu.update(this, keys);
+  let newState = new State(this.level, actors, this.status);
   if (newState.status != "playing") return newState;
   let player = newState.player;
   if (this.level.touches(player.pos, player.size, "lava")) {

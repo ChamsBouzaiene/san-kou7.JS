@@ -5,14 +5,19 @@ class DomDisplay {
   constructor(parent, level) {
     this.dom = createNode("div", { class: "game" }, drawGrid(level));
     this.actorLayer = null;
-    parent.appendChild(this.dom);
+    this.parent = parent;
+    this.parent.appendChild(this.dom);
   }
 
   restart() {}
 
   pause() {}
 
-  static showMenu() {}
+  showMenu(status) {
+    if (document.querySelector(".menu")) return;
+    const menu = createNode("div", { class: "menu" });
+    this.parent.appendChild(menu);
+  }
 
   clear() {
     this.dom.remove();
@@ -32,7 +37,6 @@ class DomDisplay {
 // };
 
 DomDisplay.prototype.syncState = function (state) {
-  console.log(state.status);
   if (this.actorLayer) updateActors(this.actorLayer, state);
   if (!this.actorLayer) {
     this.actorLayer = drawActors(state.actors);

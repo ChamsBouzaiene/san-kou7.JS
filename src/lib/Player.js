@@ -29,7 +29,6 @@ class Player {
   }
 
   static create(pos) {
-    console.log(pos);
     return new Player(pos.plus(new Vec(0, -2)), new Vec(0, 0));
   }
 }
