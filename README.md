@@ -16,3 +16,13 @@
 - lava sprite
 
 ![San-kou7.JS](ver2.png)
+
+## Version 3.0
+
+- Pause/Restart/ Actions
+- Animation Entity
+- Player Movement Animation
+- imporoved graphics
+- new Level
+
+![San-kou7.JS](ver3.png)
