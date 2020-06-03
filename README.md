@@ -1,28 +1,21 @@
 ### SAN-KOU7.JS
 
-## Version 1.0
+- try it out [HERE](https://alchemist107.github.io/san-kou7.JS/)
 
-- collision detections
-- sprites fitted
-- render engine implimented
-- lose / win Logic
+## Description
 
-![San-kou7.JS](ver1.png)
+A 2D platformer built with vanilla javascript , i purposly didn't use canvas to make it hard and to challenge my self to learn new skills, my purpose for this project is to handle multiple states with native JS and handle side effects, i have a lot of trouble doing it my solution was'nt scalable, in my next project i am going to create a js native state managment system.
 
-## Version 2.0
+## Evolution
 
-- walk animation
-- fire ball animation
-- lava sprite
+[HISTORY.md](https://github.com/alchemist107/san-kou7.JS/blob/master/HISTORY.md)
 
-![San-kou7.JS](ver2.png)
+## Product
 
-## Version 3.0
+![San-kou7.JS](ver4.png)
 
-- Pause/Restart/ Actions
-- Animation Entity
-- Player Movement Animation
-- imporoved graphics
-- new Level
+- try it out [HERE](https://alchemist107.github.io/san-kou7.JS/)
 
-![San-kou7.JS](ver3.png)
+## credits :
+
+thanks Marijn Haverbeke for his great book Eloquent JavaScript for the Inspiration for this platformer game
