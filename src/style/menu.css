@@ -16,7 +16,7 @@ body {
   position: absolute;
   z-index: 11;
   top: 569px;
-  left: 600px;
+  left: 700px;
   border-radius: 10px;
   width: 30em;
   height: 15em;
@@ -24,7 +24,8 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  position: relative;
+  position: absolute;
+
   background: repeating-linear-gradient(
       45deg,
       transparent,
@@ -200,4 +201,12 @@ body {
   padding: 0.25em 2em;
   font-size: 40px;
   font-weight: bold;
+}
+
+.main-btn:hover {
+  background: radial-gradient(
+    circle,
+    rgba(254, 250, 99, 1) 0%,
+    rgba(144, 233, 21, 1) 100%
+  );
 }

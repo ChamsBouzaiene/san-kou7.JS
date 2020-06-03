@@ -1,3 +1,5 @@
+import Music from "./Music";
+
 export default class Menu {
   constructor(dispatcher) {
     this.dipatcher = dispatcher;
@@ -11,9 +13,14 @@ export default class Menu {
         return document.location.reload();
       }
     });
+
+    window.addEventListener("mouseover", (event) => {
+      if (!Menu.menuBtnsIds.includes(event.target.id)) return;
+      Music.menuPlayer();
+    });
   }
 
-  static menuBtnsIds = ["play", "restart", "setting"];
+  static menuBtnsIds = ["play", "restart", "settings"];
 
   static updateMenuState(prevState, GameStae, keys) {
     return state;

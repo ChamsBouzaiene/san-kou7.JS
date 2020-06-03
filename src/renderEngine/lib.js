@@ -5,33 +5,8 @@ import DOMActors from "./DOMActors";
 import Menu from "../lib/Menu";
 
 import { arrowKeys } from "./listeners";
+import Music from "../lib/Music";
 let scale = 80;
-
-// const toggleMenu = (val) => {
-//   const menu = document.querySelector(".menu");
-//   if (val) return (menu.style.display = "flex");
-//   else {
-//     return (menu.style.display = "none");
-//   }
-// };
-
-// const setMenu = (title) => {
-//   const menuTitle = document.querySelector(".status-title");
-//   menuTitle.innerHTML = title;
-//   toggleMenu(true);
-// };
-
-// const updateMenu = (status) => {
-//   console.log("UPDATED", status);
-//   if (status === "paused") {
-//     return setMenu("PAUSED");
-//   }
-//   if (status === "lost") {
-//     return setMenu("GAME OVER");
-//   } else {
-//     toggleMenu(false);
-//   }
-// };
 
 export const createNode = (name, attrs, ...children) => {
   let node = document.createElement(name);
@@ -86,20 +61,26 @@ const playerMovementStates = {};
 const playerMovementMaper = {
   isMovingRight: (stance, speed) => stance === "right" && !speed.y,
   isMovingLeft: (stance, speed) => stance === "left" && !speed.y,
-  isJumping: (stance, speed) => stance === "jump" || speed.y,
+  isJumping: (stance, speed) => stance === "jump" || speed.y !== 0,
   isJumpingRight: (stance, speed) => {},
   isJumpingLeft: (stance, speed) => {},
 };
 
 function updatePlayerAnimation(playerNode, stance, speed) {
   const { isMovingRight, isMovingLeft, isJumping } = playerMovementMaper;
+  if (isJumping(stance, speed)) {
+    Music.jumpPlayer();
+  }
   if (isMovingRight(stance, speed)) {
+    Music.walkPlayer();
     playerNode.classList.remove("idle", "left", "jump");
     playerNode.classList.add("right");
   } else if (isMovingLeft(stance, speed)) {
+    Music.walkPlayer();
     playerNode.classList.remove("idle", "right", "jump");
     playerNode.classList.add("left");
   } else if (stance === "jump" || speed.y) {
+    Music.idlePlayer();
     playerNode.classList.remove("idle", "right", "left", "jump", "jump-left");
     if (stance === "left" || speed.x < 0) {
       playerNode.classList.add("jump-left");
@@ -107,6 +88,7 @@ function updatePlayerAnimation(playerNode, stance, speed) {
       playerNode.classList.add("jump");
     }
   } else {
+    Music.idlePlayer();
     playerNode.classList.remove("right");
     playerNode.classList.remove("left");
     playerNode.classList.remove("jump");
@@ -167,6 +149,7 @@ export function updateActors(actorLayer, state) {
 export function actionReducer(action, actors) {
   const player = DOMActors.getPlayer(actors);
   if (action == "coinEated") {
+    Music.playCoin();
     Animation.collectedCoin(player);
   }
   Animation.cleanUP(player);
@@ -187,6 +170,8 @@ export function runAnimation(frameFunc) {
 
 export function runLevel(level, dis, men, gameControler) {
   let menu = new Menu(gameControler);
+  let music = new Music();
+  music.BgPlayer();
   let display = dis;
   let state = State.start(level, menu);
   let ending = 1;
@@ -194,18 +179,15 @@ export function runLevel(level, dis, men, gameControler) {
   return new Promise((resolve) => {
     runAnimation((time) => {
       if (gameControler.status === "paused") {
-        // gameControler.setStatus("playing");
         Menu.updateMenu(gameControler.status);
 
         return;
       }
       if (gameControler.status === "playing") {
-        // gameControler.setStatus("playing");
         Menu.updateMenu(gameControler.status);
       }
 
       if (gameControler.status === "lost") {
-        // gameControler.setStatus("playing");
         Menu.updateMenu(gameControler.status);
       }
       state = state.update(time, arrowKeys);
@@ -216,69 +198,23 @@ export function runLevel(level, dis, men, gameControler) {
         return true;
       } else if (state.status === "paused") {
         Menu.updateMenu(state.status);
-        //display.clear();
         return true;
       } else if (state.status === "lost") {
+        Music.lostplayer();
+        Music.collidePlayer();
+        music.BgPlayer("stop");
+
         Menu.updateMenu(state.status);
         resolve(state.status);
-        //display.menu();
-        //display.clear();
+
         return false;
       } else if (ending > 0) {
         ending -= time;
         return true;
       } else {
-        //display.clear();
         resolve(state.status);
         return false;
       }
     });
   });
 }
-
-// function runLevel(level, Display) {
-//   let display = new Display(document.body, level);
-//   let state = State.start(level);
-//   let ending = 1;
-//   let running = "yes";
-
-//   return new Promise((resolve) => {
-//     function escHandler(event) {
-//       if (event.key != "Escape") return;
-//       event.preventDefault();
-//       if (running == "no") {
-//         running = "yes";
-//         runAnimation(frame);
-//       } else if (running == "yes") {
-//         running = "pausing";
-//       } else {
-//         running = "yes";
-//       }
-//     }
-//     window.addEventListener("keydown", escHandler);
-//     let arrowKeys = trackKeys(["ArrowLeft", "ArrowRight", "ArrowUp"]);
-
-//     function frame(time) {
-//       if (running == "pausing") {
-//         running = "no";
-//         return false;
-//       }
-
-//       state = state.update(time, arrowKeys);
-//       display.syncState(state);
-//       if (state.status == "playing") {
-//         return true;
-//       } else if (ending > 0) {
-//         ending -= time;
-//         return true;
-//       } else {
-//         display.clear();
-//         window.removeEventListener("keydown", escHandler);
-//         arrowKeys.unregister();
-//         resolve(state.status);
-//         return false;
-//       }
-//     }
-//     runAnimation(frame);
-//   });
-// }
