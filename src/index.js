@@ -13,6 +13,6 @@ import DomDisplay from "./renderEngine/DomDisplay";
 let simpleLevel = new Level(groundLevel3);
 const { startActors, rows } = simpleLevel;
 let display = new DomDisplay(document.body, simpleLevel);
-let menu = new Menu("off");
+let menu = new Menu();
 let gameControler = new GameControler();
 runGame(simpleLevel, display, menu, gameControler);

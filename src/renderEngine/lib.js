@@ -2,49 +2,44 @@ import State from "../lib/State";
 import Animation from "./Animation";
 import DOMActors from "./DOMActors";
 
-//import Menu from "../lib/Menu";
+import Menu from "../lib/Menu";
 
 import { arrowKeys } from "./listeners";
 let scale = 80;
 
-const toggleMenu = (val) => {
-  console.log(val, "Toggle");
-  const menu = document.querySelector(".menu");
-  if (val) return (menu.style.display = "flex");
-  else {
-    return (menu.style.display = "none");
-  }
-};
+// const toggleMenu = (val) => {
+//   const menu = document.querySelector(".menu");
+//   if (val) return (menu.style.display = "flex");
+//   else {
+//     return (menu.style.display = "none");
+//   }
+// };
 
-const setMenu = (title) => {
-  const menuTitle = document.querySelector(".status-title");
-  menuTitle.innerHTML = title;
-  toggleMenu(true);
-};
+// const setMenu = (title) => {
+//   const menuTitle = document.querySelector(".status-title");
+//   menuTitle.innerHTML = title;
+//   toggleMenu(true);
+// };
 
-const updateMenu = (status) => {
-  console.log("UPDATED", status);
-  if (status === "paused") {
-    return setMenu("PAUSED");
-  }
-  if (status === "lost") {
-    return setMenu("GAME OVER");
-  } else {
-    toggleMenu(false);
-  }
-};
+// const updateMenu = (status) => {
+//   console.log("UPDATED", status);
+//   if (status === "paused") {
+//     return setMenu("PAUSED");
+//   }
+//   if (status === "lost") {
+//     return setMenu("GAME OVER");
+//   } else {
+//     toggleMenu(false);
+//   }
+// };
 
 export const createNode = (name, attrs, ...children) => {
   let node = document.createElement(name);
   for (let attr of Object.keys(attrs)) {
     node.setAttribute(attr, attrs[attr]);
   }
-  console.log(children);
   for (let child of children) {
-    console.log(child, "a CHILD");
     if (typeof child === "string") {
-      console.log(child, "a CHILD type text");
-
       return node.appendChild(document.createTextNode(child));
     }
     node.appendChild(child);
@@ -172,7 +167,6 @@ export function updateActors(actorLayer, state) {
 export function actionReducer(action, actors) {
   const player = DOMActors.getPlayer(actors);
   if (action == "coinEated") {
-    console.log("EATED");
     Animation.collectedCoin(player);
   }
   Animation.cleanUP(player);
@@ -192,7 +186,7 @@ export function runAnimation(frameFunc) {
 }
 
 export function runLevel(level, dis, men, gameControler) {
-  let menu = men;
+  let menu = new Menu(gameControler);
   let display = dis;
   let state = State.start(level, menu);
   let ending = 1;
@@ -201,34 +195,31 @@ export function runLevel(level, dis, men, gameControler) {
     runAnimation((time) => {
       if (gameControler.status === "paused") {
         // gameControler.setStatus("playing");
-        updateMenu(gameControler.status);
-        console.log("paused", gameControler.status);
+        Menu.updateMenu(gameControler.status);
 
         return;
       }
       if (gameControler.status === "playing") {
         // gameControler.setStatus("playing");
-        updateMenu(gameControler.status);
-        console.log("paused", gameControler.status);
+        Menu.updateMenu(gameControler.status);
       }
 
       if (gameControler.status === "lost") {
         // gameControler.setStatus("playing");
-        updateMenu(gameControler.status);
-        console.log("paused", gameControler.status);
+        Menu.updateMenu(gameControler.status);
       }
       state = state.update(time, arrowKeys);
       display.syncState(state);
       if (state.status === "playing") {
-        updateMenu(state.status);
+        Menu.updateMenu(state.status);
 
         return true;
       } else if (state.status === "paused") {
-        updateMenu(state.status);
+        Menu.updateMenu(state.status);
         //display.clear();
         return true;
       } else if (state.status === "lost") {
-        updateMenu(state.status);
+        Menu.updateMenu(state.status);
         resolve(state.status);
         //display.menu();
         //display.clear();
