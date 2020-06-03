@@ -7,16 +7,46 @@ import DOMActors from "./DOMActors";
 import { arrowKeys } from "./listeners";
 let scale = 80;
 
-export function drawMenu(pause) {
-  createNode();
-}
+const toggleMenu = (val) => {
+  console.log(val, "Toggle");
+  const menu = document.querySelector(".menu");
+  if (val) return (menu.style.display = "flex");
+  else {
+    return (menu.style.display = "none");
+  }
+};
+
+const setMenu = (title) => {
+  const menuTitle = document.querySelector(".status-title");
+  menuTitle.innerHTML = title;
+  toggleMenu(true);
+};
+
+const updateMenu = (status) => {
+  console.log("UPDATED", status);
+  if (status === "paused") {
+    return setMenu("PAUSED");
+  }
+  if (status === "lost") {
+    return setMenu("GAME OVER");
+  } else {
+    toggleMenu(false);
+  }
+};
 
 export const createNode = (name, attrs, ...children) => {
   let node = document.createElement(name);
   for (let attr of Object.keys(attrs)) {
     node.setAttribute(attr, attrs[attr]);
   }
+  console.log(children);
   for (let child of children) {
+    console.log(child, "a CHILD");
+    if (typeof child === "string") {
+      console.log(child, "a CHILD type text");
+
+      return node.appendChild(document.createTextNode(child));
+    }
     node.appendChild(child);
   }
   return node;
@@ -171,17 +201,34 @@ export function runLevel(level, dis, men, gameControler) {
     runAnimation((time) => {
       if (gameControler.status === "paused") {
         // gameControler.setStatus("playing");
-        display.showMenu("paused");
+        updateMenu(gameControler.status);
+        console.log("paused", gameControler.status);
+
         return;
+      }
+      if (gameControler.status === "playing") {
+        // gameControler.setStatus("playing");
+        updateMenu(gameControler.status);
+        console.log("paused", gameControler.status);
+      }
+
+      if (gameControler.status === "lost") {
+        // gameControler.setStatus("playing");
+        updateMenu(gameControler.status);
+        console.log("paused", gameControler.status);
       }
       state = state.update(time, arrowKeys);
       display.syncState(state);
       if (state.status === "playing") {
+        updateMenu(state.status);
+
         return true;
       } else if (state.status === "paused") {
+        updateMenu(state.status);
         //display.clear();
         return true;
       } else if (state.status === "lost") {
+        updateMenu(state.status);
         resolve(state.status);
         //display.menu();
         //display.clear();

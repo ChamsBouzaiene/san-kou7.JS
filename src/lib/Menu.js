@@ -5,14 +5,13 @@ export default class Menu {
   static updateMenuState(prevState, GameStae, keys) {
     return state;
   }
+
+  static appendMenu() {}
 }
 
 Menu.prototype.update = function (state, keys) {
-  if (keys.Escape && state.status === "playing") {
+  if (status === "playing") {
     return new Menu("on");
   }
-  // if ("keyEsc" && "state.status" === "palying") {
-  //   updateState("pause");
-  // }
   return new Menu("off");
 };

@@ -1,7 +1,8 @@
 require("babel-core/register");
 require("babel-polyfill");
-
 import "./style/main.css";
+import "./style/menu.css";
+
 import { runGame } from "./renderEngine";
 import Menu from "./lib/Menu";
 import GameControler from "./lib/GameController";

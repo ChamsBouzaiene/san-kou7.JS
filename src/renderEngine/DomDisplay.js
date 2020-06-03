@@ -13,11 +13,7 @@ class DomDisplay {
 
   pause() {}
 
-  showMenu(status) {
-    if (document.querySelector(".menu")) return;
-    const menu = createNode("div", { class: "menu" });
-    this.parent.appendChild(menu);
-  }
+  showMenu(status) {}
 
   clear() {
     this.dom.remove();

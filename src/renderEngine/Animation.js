@@ -13,16 +13,15 @@ export default class Animation {
   }
 
   static cleanUP(player) {
-    if (player.children) {
+    if (Array.from(player.children).length) {
       Animation.timer++;
     }
     console.log(Animation.timer);
     if (Animation.timer > 20 && Array.from(player.children).length) {
       const child = player.children;
-      console.log(child);
       child[0].remove();
       Animation.timer = 0;
-    } else if (Animation.timer > 20) {
+    } else if (Animation.timer > 20 && Animation.timer !== 0) {
       Animation.timer = 0;
     }
   }
