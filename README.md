@@ -14,7 +14,7 @@ A 2D platformer built with vanilla javascript , i purposly didn't use canvas to 
 
 ![San-kou7.JS](ver4.png)
 
-- try it out [HERE](https://alchemist107.github.io/san-kou7.JS/)
+- try it out [HERE](https://chamsbouzaiene.github.io/san-kou7.JS/)
 
 ## credits :
 
